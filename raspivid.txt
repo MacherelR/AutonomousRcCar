@@ -1,0 +1,8 @@
+flux video :
+raspivid -t 0
+pkill raspivid 
+
+
+
+voir caméra avec filtre !
+
