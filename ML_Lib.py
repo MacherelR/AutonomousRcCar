@@ -31,7 +31,7 @@ import cv2
 from imgaug import augmenters as img_aug
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
-%matplotlib inline
+#%matplotlib inline
 from PIL import Image
 
 
