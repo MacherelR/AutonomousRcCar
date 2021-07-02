@@ -18,9 +18,9 @@ def print_error():
 
 def main(argv):
     #launch socket connection
-    address = ('localhost', 6000)
-    with Client(address,authkey=None) as c:
-        event_filename = '/dev/input/event5'
+    #address = ('localhost', 6000)
+    # with Client(address,authkey=None) as c:
+        event_filename = '/dev/input/event2'
         #Get arguments
         try:
             opts, args = getopt.getopt(argv, "h?e:", ["help", "event="])
@@ -33,9 +33,9 @@ def main(argv):
                 sys.exit()
             elif opt in ("-e", "--event"):
                 event_filename = arg
-        run_manually(event_filename,c) 
+        run_manually(event_filename) 
 
-def run_manually(event_filename,c):
+def run_manually(event_filename,c=None):
     controller = InputDevice(event_filename)
     loop = asyncio.get_event_loop()
     try:
@@ -46,17 +46,17 @@ def run_manually(event_filename,c):
         loop.close()
         
     loop.run_in_executor
-async def event_manager(device,c):
+async def event_manager(device,c= None):
     SpeedCtrl = SpeedController(PIN_SPEED,1.2,1.4,True)#1.4 pour limiter la vitesse, voire moins
     SteeringCtrl = SteeringController(PIN_STEERING,1.2,1.8,True) 
     SteeringCtrl.startPwm()
     SpeedCtrl.startPwm()
-    c.send('Ready')
+    #c.send('Ready')
     async for event in device.async_read_loop():
         if event.type == ecodes.EV_ABS:
             if  event.code == ecodes.ABS_X:  #Joy Gauche / Gauche- Droite+
                 val = TB_Library.map(event.value, 0, 255, 2, 0)
-                c.send(val)
+                #c.send(val)
                 SteeringCtrl.angle(val) #Inverse des limites afin de tourner a gauche lorsque l'on pointe le joystick à gauche
                 #print("X: ", event.value)
             elif  event.code == ecodes.ABS_RY: #Joy Droite / Haut- Bas+
@@ -64,7 +64,7 @@ async def event_manager(device,c):
                 #print("Y: ", event.value)
         elif event.type == ecodes.EV_KEY :
             if event.code == ecodes.BTN_B : # If button B (xBox) or circle (ps4) is pressed, exiting loop !
-                c.send('close')
+                #c.send('close')
                 raise KeyboardInterrupt
 
 if __name__ == "__main__":

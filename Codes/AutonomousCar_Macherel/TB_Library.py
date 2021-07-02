@@ -25,6 +25,10 @@ def load_configuration(confPath):
         conf = yaml.load(fd, Loader=yaml.FullLoader)
     return conf
 
+def write_configuration(confPath,conf):
+    with open(confPath,'w') as fd:
+        yaml.dump(conf,fd)
+
 def map(x_in, in_min, in_max, out_min, out_max, limit=False):
     x_out = (x_in - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
     if limit:

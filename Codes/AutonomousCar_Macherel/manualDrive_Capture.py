@@ -58,26 +58,23 @@ def main(argv):
         for thread in threading.enumerate():
             print(thread)
         startTime = time.time()
-        run_manually(event_filename,ManualCar) 
+        run_manually(event_filename,ManualCar,Collector) 
         print(F"Duration : {time.time()-startTime}")
     #pause()
 
 
-def run_manually(event_filename,car):
+def run_manually(event_filename,car,Collector):
     controller = InputDevice(event_filename)
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(event_manager(controller,car))
     except KeyboardInterrupt:
         print("Received exit, exiting")
+        Collector.stopThread()
         loop.close()
         
     loop.run_in_executor
 async def event_manager(device,car):
-    # SpeedCtrl = SpeedController(PIN_SPEED,1.2,1.4,True)#1.4 pour limiter la vitesse, voire moins
-    # SteeringCtrl = SteeringController(PIN_STEERING,1.2,1.8,True) 
-    # SpeedCtrl = car.SpeedCtrl
-    # SteeringCtrl = car.SteeringCtrl
     car.SteeringCtrl.startPwm()
     car.SpeedCtrl.startPwm()
     async for event in device.async_read_loop():
@@ -87,7 +84,11 @@ async def event_manager(device,car):
                 car.SteeringCtrl.angle(TB_Library.map(event.value, 0, 255, 1, -1)) #Inverse des limites afin de tourner a gauche lorsque l'on pointe le joystick à gauche
                 #print("X: ", event.value)
             elif  event.code == ecodes.ABS_RY: #Joy Droite / Haut- Bas+
-                car.SpeedCtrl.speed(TB_Library.map(event.value, 0, 255, 1, -1)) # AVANT --> Marche avant , Mappage en % du max pour régler la vitesse ATTENTION voir pour arret urgence
+                if event.value > 0 and event.value < 20 :
+                    val = 0
+                else:
+                    val = event.value
+                car.SpeedCtrl.speed(TB_Library.map(val, 0, 255, 1, -1)) 
                 #print("Y: ", event.value)
         elif event.type == ecodes.EV_KEY :
             if event.code == ecodes.BTN_B : # If button B (xBox) or circle (ps4) is pressed, exiting loop !

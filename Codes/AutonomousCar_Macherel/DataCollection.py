@@ -21,10 +21,8 @@ from datetime import datetime
 from cameraController import PicameraController
 from image_warper import ImgWarper
 from image_rectifier import ImgRectifier
-from UndistortImage import ImageCalibrator
 from car import Car
 import TB_Library
-from road_follower import RoadFollower
 CONFIG_FNAME = os.path.join(currentdir, 'conf_MAR.yaml')
 CONFIG_ROI_FNAME = os.path.join(currentdir,'Conf_ROI.yaml')
 from multiprocessing.connection import Listener
@@ -37,22 +35,14 @@ class DataCollector():
         self.camera = self.car.camera
         self.freq = freqMs/1000 # Convert in s for sleep
         self.address = Listen
-        # self.imgRectifier = rectifier
-        # self.imgWarper = warper
         self.imagesList = []
         self.steeringList = []
         self.timesList = []
         self.folderCount = 0
         self.count = 0
+        self.initialID = self.car.conf['DATACOLLECTION']['ID']
         self.currentDirectory = os.path.join(os.getcwd(),'DataCollected')
-        self.roi = TB_Library.load_configuration(CONFIG_ROI_FNAME)
         self.meanCapture = 0
-        # self.imgCalibrator = ImageCalibrator(
-        #     ParamFile= os.path.join(currentdir, self.car.conf["CALIBRATION"]["paramFile"]),
-        #     imageShape = self.car.conf["CALIBRATION"]["img_resolution"][::-1]
-        # )
-        #print(self.currentDirectory)
-
         # CREATE A NEW FOLDER BASED ON THE PREVIOUS FOLDER COUNT
         while os.path.exists(os.path.join(self.currentDirectory,f'SET{str(self.folderCount)}')):
             self.folderCount += 1
@@ -63,7 +53,7 @@ class DataCollector():
         # now = datetime.now()
         # timestamp = str(datetime.timestamp(now)).replace('.', '')
 
-        imName = "Image_{}.png".format(self.count)
+        imName = "Image_{}.png".format(self.count+self.initialID)
         self.count+=1
         filename = os.path.join(self.newPath,imName)
         cv2.imwrite(filename,img)
@@ -102,10 +92,13 @@ class DataCollector():
         #print('times saved')
 
     def stopThread(self):
+        self.stopped = True
         print("End recording")
         self.saveLogFile()
         self.saveTimeFile()
-        self.stopped = True
+        self.car.conf['DATACOLLECTION']['ID'] = self.count+self.initialID
+        TB_Library.write_configuration(CONFIG_FNAME,self.car.conf)
+        
     
     def _run(self):
         if self.worksAlone: #Used for tests
@@ -116,14 +109,16 @@ class DataCollector():
                 cv2.waitKey(1)
             self.done = True
         else:
-            while (not self.stopped):
-                stTime = time.time()
-                img = self.camera.capture_np()
-                #imgCal = self.imgCalibrator.undistort(img)
-                # imgCropped = imgCal[int(self.roi[1]):int(self.roi[1]+self.roi[3]), int(self.roi[0]):int(self.roi[0]+self.roi[2])]
-                self.saveData(img,TB_Library.map(self.car.SteeringCtrl.currentSteering,-1,1,45,135))
-                elapsedtime = time.time() - stTime
-                self.timesList.append(elapsedtime)
+                while (not self.stopped):
+                    stTime = time.time()
+                    img = self.camera.capture_np()
+                    if self.stopped :
+                        break
+                    # savedAngle = TB_Library.map(self.car.SteeringCtrl.currentSteering,-1,1,135,45)
+                    # print(F"Saved Angle : {savedAngle}")
+                    self.saveData(img,TB_Library.map(self.car.SteeringCtrl.currentSteering,-1,1,135,45))
+                    elapsedtime = time.time() - stTime
+                    self.timesList.append(elapsedtime)
     def getDatas (self):
         with Listener(self.address,authkey=None) as listener :
             print("Collection started...")
@@ -146,9 +141,9 @@ if __name__ == '__main__':
     config = TB_Library.load_configuration(CONFIG_FNAME)
     myCar = Car(config)
     Collector = DataCollector(myCar,alone=True)
-    imgCalibrator = ImageCalibrator( # IF Config file = conf_MAR
-        imageShape = config["CALIBRATION"]["img_resolution"][::-1], #Reverse values
-        ParamFile = os.path.join(currentdir, config["CALIBRATION"]["paramFile"]))
+    # imgCalibrator = ImageCalibrator( # IF Config file = conf_MAR
+    #     imageShape = config["CALIBRATION"]["img_resolution"][::-1], #Reverse values
+    #     ParamFile = os.path.join(currentdir, config["CALIBRATION"]["paramFile"]))
     with Collector :
         print("DataCollecting...")
         while (not Collector.done):

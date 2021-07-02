@@ -53,9 +53,9 @@ class SteeringController(_PwmActuator):
 
     def angle(self, angle):
         """Set the current wheel angle
-        -1   = MAX LEFT
+        -1   = MAX RIGHT
         0  = FORWARD
-        1 = MAX RIGHT"""
+        1 = MAX LEFT"""
         # normAngle = TB_Library.map(angle,0,100,-1,1)
         dutyCycle = TB_Library.map(angle,-1,1,self.MinDutyCycle,self.MaxDutyCycle,limit=True)
         #print(F"Angle value sent to pwm_ctrl : {dutyCycle}")
