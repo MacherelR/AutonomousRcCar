@@ -240,13 +240,15 @@ def drawHeadingLine(img, steering, line_color=(0, 0, 255), line_width=5, ):
     # 0-89 degree: turn left
     # 90 degree: going straight
     # 91-180 degree: turn right 
+    steerTxt = str(int(steering))
     steeringRad = steering / 180.0 * math.pi
     x1 = int(width / 2)
     y1 = height
     x2 = int(x1 - height / 2 / math.tan(steeringRad))
     y2 = int(height / 2)
-
+    font = cv2.FONT_HERSHEY_SIMPLEX
     cv2.line(heading_image, (x1, y1), (x2, y2), line_color, line_width)
+    cv2.putText(heading_image,steerTxt,(x2+5,y2+5),font,1,(255,0,0),2)
     heading_image = cv2.addWeighted(img, 0.8, heading_image, 1, 1)
 
     return heading_image

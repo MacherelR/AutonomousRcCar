@@ -57,8 +57,8 @@ class SteeringController(_PwmActuator):
         0  = FORWARD
         1 = MAX LEFT"""
         # normAngle = TB_Library.map(angle,0,100,-1,1)
-        dutyCycle = TB_Library.map(angle,-1,1,self.MinDutyCycle,self.MaxDutyCycle,limit=True)
-        #print(F"Angle value sent to pwm_ctrl : {dutyCycle}")
+        dutyCycle = TB_Library.map(angle,1,-1,self.MinDutyCycle,self.MaxDutyCycle,limit=True)
+        print(F"Duty cycle value sent to pwm_ctrl : {dutyCycle}")
         self.currentSteering = angle
         self.pwm_ctrl.set_duty_cycle(dutyCycle)
 
@@ -84,4 +84,6 @@ class SpeedController(_PwmActuator):
         duty_cycle = TB_Library.map(speed,-1,1,self.MinDutyCycle,self.MaxDutyCycle,limit=True)
         #print(F"Duty_cycle : {duty_cycle}")
         self.currentSpeed = duty_cycle
-        self.pwm_ctrl.set_duty_cycle(duty_cycle)
+        
+        print(F"Speed Value : {duty_cycle}")
+        self.pwm_ctrl.set_duty_cycle(duty_cycle) #duty_cycle

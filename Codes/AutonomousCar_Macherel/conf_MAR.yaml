@@ -26,21 +26,19 @@ CAMERA:
   - 3.674
   - 2.738
 CAR:
-  speed_pwm_dc_max: 1.45
+  full_speed: 1.6
+  low_speed: 1.45
+  speed_pwm_dc_max: 1.8
   speed_pwm_dc_min: 1.2
-  full_speed : 1.45
-  low_speed : 1.3
   steering_pwm_dc_max: 1.8
   steering_pwm_dc_min: 1.2
 CONTROLLER:
   btn_stop: BTN_B
   event_filename: /dev/input/event2
 DATACOLLECTION:
-  ID: 7876
+  ID: 9091
+LANENAVIGATION:
+  modelFile: /Models/model.tflite
 PIN:
-  proximity_echo: 24
-  proximity_trigger: 23
   pwm_speed: 18
   pwm_steering: 19
-LANENAVIGATION:
-  modelFile : '/Models/model.tflite'

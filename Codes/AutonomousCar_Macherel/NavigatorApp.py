@@ -29,7 +29,9 @@ class NavigationApp():
         self.minExecTime = 1/self.conf['APP']['maxFps']
         self.car = Car(
             conf= self.conf,
-            current_threads_fps=self.threads_fps
+            current_threads_fps=self.threads_fps,
+            hardSpeed= True,
+            hardSteer= False
         )
         self.LaneNavigator = LaneNavigator(
             conf=self.conf,
@@ -55,27 +57,36 @@ class NavigationApp():
                 for thread in threading.enumerate():
                     print(thread)
                 startTime = time.time()
-                while True:
+                launchTime = startTime
+                while (time.time() - launchTime) < 5:
                     # Display Datas
                     if self.LaneNavigator.OriginalImage is not None:
                         cv2.imshow("Original",cv2.cvtColor(self.LaneNavigator.OriginalImage,cv2.COLOR_RGB2BGR))
                     if self.LaneNavigator.drawedImage is not None:
                         cv2.imshow("Heading",cv2.cvtColor(self.LaneNavigator.drawedImage,cv2.COLOR_RGB2BGR))
+                    # --------- CAR SPEED ----------
+                    if self.LaneNavigator.offRoad == False:
 
-                    #Car speeding
-                    self.car.SpeedCtrl.speed(self.computeSpeed(self.LaneNavigator.currentSteering))
+                    #speed = self.computeSpeed(self.LaneNavigator.currentSteering)
+                        speed = 1.68
+                    #print(F"Speed value [main] : {speed}")
+                        speed = TB_Library.map(speed,self.conf['CAR']['speed_pwm_dc_min'],self.conf['CAR']['speed_pwm_dc_max'],-1,1)
+                        self.car.SpeedCtrl.speed(speed)
                     # if(self.LaneNavigator.currentSteering > 85 and self.LaneNavigator.currentSteering < 95):
                     #     self.car.SpeedCtrl.speed(self.conf['CAR']['full_speed'])
                     # else:
                     #     self.car.SpeedCtrl.speed(self.conf['CAR']['low_speed'])
+                    else:
+                        self.car.SpeedCtrl.stop()
+                        print("Stopping car because offroad !")
                     key = cv2.waitKey(1)
                     if key == ord('q'):
                         break
 
                     elapsedTime = time.time() -startTime
-                    if (elapsedTime < self.minExecTime):
-                        time.sleep(self.minExecTime-elapsedTime)
-                    self.threads_fps['Main'] = 1/(time.time()-startTime)
+                    # if (elapsedTime < self.minExecTime):
+                    #     time.sleep(self.minExecTime-elapsedTime)
+                    # self.threads_fps['Main'] = 1/(time.time()-startTime)
                     startTime = time.time()
         
         cv2.destroyAllWindows()

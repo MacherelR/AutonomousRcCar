@@ -11,19 +11,19 @@ import time
 
 
 class Car():
-    def __init__(self,conf,current_threads_fps=None):
+    def __init__(self,conf,current_threads_fps=None,hardSteer = False,hardSpeed = False):
         self.conf = conf
         self.SteeringCtrl = SteeringController(
             pin=self.conf["PIN"]["pwm_steering"],
             minDutyCycle = self.conf["CAR"]["steering_pwm_dc_min"],
             maxDutyCycle = self.conf["CAR"]["steering_pwm_dc_max"], 
-            hardware=False
+            hardware=hardSteer
         )
         self.SpeedCtrl = SpeedController(
             pin=self.conf["PIN"]["pwm_speed"],
             minDutyCycle = self.conf["CAR"]["speed_pwm_dc_min"],
             maxDutyCycle = self.conf["CAR"]["speed_pwm_dc_max"],
-            hardware=False
+            hardware=hardSpeed
         )
         self.camera = PicameraController(
             cam_param_dict = [(arg, value) for (arg, value) in self.conf['CAMERA']['parameters'].items() if value != None],
