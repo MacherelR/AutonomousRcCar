@@ -58,7 +58,7 @@ class NavigationApp():
                     print(thread)
                 startTime = time.time()
                 launchTime = startTime
-                while (time.time() - launchTime) < 5:
+                while (time.time() - launchTime) < 20:
                     # Display Datas
                     if self.LaneNavigator.OriginalImage is not None:
                         cv2.imshow("Original",cv2.cvtColor(self.LaneNavigator.OriginalImage,cv2.COLOR_RGB2BGR))
@@ -68,7 +68,7 @@ class NavigationApp():
                     if self.LaneNavigator.offRoad == False:
 
                     #speed = self.computeSpeed(self.LaneNavigator.currentSteering)
-                        speed = 1.68
+                        speed = 1.6
                     #print(F"Speed value [main] : {speed}")
                         speed = TB_Library.map(speed,self.conf['CAR']['speed_pwm_dc_min'],self.conf['CAR']['speed_pwm_dc_max'],-1,1)
                         self.car.SpeedCtrl.speed(speed)

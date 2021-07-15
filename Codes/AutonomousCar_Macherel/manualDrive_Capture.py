@@ -81,7 +81,7 @@ async def event_manager(device,car):
         if event.type == ecodes.EV_ABS:
             if  event.code == ecodes.ABS_X:  #Joy Gauche / Gauche- Droite+
                 #setAngle = TB_Library.map(event.value, 0, 255, 1, -1)
-                car.SteeringCtrl.angle(TB_Library.map(event.value, 0, 255, 1, -1)) #Inverse des limites afin de tourner a gauche lorsque l'on pointe le joystick à gauche
+                car.SteeringCtrl.angle(TB_Library.map(event.value, 0, 255, -1, 1)) #Inverse des limites afin de tourner a gauche lorsque l'on pointe le joystick à gauche
                 #print("X: ", event.value)
             elif  event.code == ecodes.ABS_RY: #Joy Droite / Haut- Bas+
                 if event.value > 0 and event.value < 20 :

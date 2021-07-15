@@ -80,6 +80,7 @@ class HardPwm(_IPwm):
             raise HardPWMException("Need to add 'dtoverlay=pwm-2chan' to /boot/config.txt and reboot to enable PWM") 
         self._create_pwmX()
         self.set_frequency(self.freq)
+        self.set_duty_cycle(1.6) # Force to medium duty_cycle to enable PWM (medium = not moving)
         return
 
     def __del__(self):

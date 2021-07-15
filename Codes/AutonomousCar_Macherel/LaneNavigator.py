@@ -48,7 +48,7 @@ class LaneNavigator:
         self.interpreter.allocate_tensors()
         self.input_shape = common.input_size(self.interpreter)
         self.input_details = self.interpreter.get_input_details()
-        print(F"Input shape : {self.input_shape}")
+        #print(F"Input shape : {self.input_shape}")
         self.output_details = self.interpreter.get_output_details()
         #self.input_shape = self.interpreter.get_input_details()
         self.timesList = []
@@ -93,6 +93,8 @@ class LaneNavigator:
         # ------ STEERING -----
         steering = outputData[0][0]
         # print(F"Current steering : {steering}")
+        # if steering > self.currentSteering + 20 : #avoid "Jumps"
+        #     steering = self.currentSteering
         return steering
 
     def _run(self):
@@ -114,9 +116,9 @@ class LaneNavigator:
                 #print("In road")
                 self.offRoad = False
                 self.currentSteering = self.computeSteering(image)
-                print(F"Computed steering : {self.currentSteering}")
+                #print(F"Computed steering : {self.currentSteering}")
                 if self.steeringCtl is not None:
-                    self.steeringCtl.angle(TB_Library.map(self.currentSteering, 45, 135, 1, -1))
+                    self.steeringCtl.angle(TB_Library.map(self.currentSteering, 45, 135, -1, 1))
                     headingFrame = ML_Lib.drawHeadingLine(image,self.currentSteering)
                 self.drawedImage = headingFrame
             else:
