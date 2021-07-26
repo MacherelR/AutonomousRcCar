@@ -1,3 +1,16 @@
+## ----------------------------------- Infos -----------------------------------
+#   Author:            Rémy Macherel
+#   Project:           Autonomous RC Car
+#   File:              manualDrive.py
+#   Link:              https://github.com/MacherelR/AutonomousRcCar
+#   Creation date :    14.05.2021
+#   Last modif date:   13.06.2021
+## ----------------------------------- Infos -----------------------------------
+
+## -------------------------------- Description --------------------------------
+#   Development script used initially to test manual driving without capture
+## -------------------------------- Description --------------------------------
+
 import sys, getopt, os,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)

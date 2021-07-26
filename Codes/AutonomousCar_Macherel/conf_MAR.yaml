@@ -36,9 +36,9 @@ CONTROLLER:
   btn_stop: BTN_B
   event_filename: /dev/input/event2
 DATACOLLECTION:
-  ID: 12321
+  ID: 13575
 LANENAVIGATION:
-  modelFile: /Models/V7/modelConvertedQT2.tflite
+  modelFile: /Models/V8/modelConvertedQT2.tflite
 PIN:
   pwm_speed: 18
   pwm_steering: 19

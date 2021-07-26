@@ -1,3 +1,5 @@
+#Classes and methods written by Maxime Charrière, https://github.com/maximecharriere/AutonomousRcCar
+
 #!/usr/bin/env python3
 import os
 import RPi.GPIO as GPIO

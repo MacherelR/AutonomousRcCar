@@ -8,7 +8,21 @@ in the log file.
 - Call the saveLog function to end.
 - If runs independent, will save ten images as a demo.
 """
-# https://github.com/murtazahassan/Neural-Networks-Self-Driving-Car-Raspberry-Pi/blob/main/Step1-Data-Collection/DataCollectionModule.py
+# 
+## ----------------------------------- Infos -----------------------------------
+#   Author:            Rémy Macherel
+#   Project:           Autonomous RC Car
+#   File:              DataCollection.py
+#   Link:              https://github.com/MacherelR/AutonomousRcCar
+#   Creation date :    14.05.2021
+#   Last modif date:   13.06.2021
+## ----------------------------------- Infos -----------------------------------
+
+## -------------------------------- Description --------------------------------
+#   Class defined to collect data from the manual driving operation, 
+#   inspired by https://github.com/murtazahassan/Neural-Networks-Self-Driving-Car-Raspberry-Pi/blob/main/Step1-Data-Collection/DataCollectionModule.py
+#   Adapted and modified on purpose
+## -------------------------------- Description --------------------------------
 
 import sys, getopt, os,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
@@ -50,9 +64,6 @@ class DataCollector():
         os.makedirs(self.newPath)
     
     def saveData(self,img,steering):
-        # now = datetime.now()
-        # timestamp = str(datetime.timestamp(now)).replace('.', '')
-
         imName = "Image_{}.png".format(self.count+self.initialID)
         self.count+=1
         filename = os.path.join(self.newPath,imName)
@@ -67,7 +78,6 @@ class DataCollector():
         df.to_csv(os.path.join(self.newPath,f'log_{str(self.folderCount)}.csv'), index=False, header=False)
         print('Log Saved')
         print('Total Images: ',len(self.imagesList))
-        #print('Mean capture time : ',self.meanCapture)
     
     def __enter__(self):
         self.startThread()
@@ -89,7 +99,6 @@ class DataCollector():
                     'Mean : ': self.meanCapture}
         df = pd.DataFrame(self.data)
         df.to_csv(os.path.join(currentdir,'Capturetimes.csv'), index=False, header=False)
-        #print('times saved')
 
     def stopThread(self):
         self.stopped = True
@@ -104,36 +113,18 @@ class DataCollector():
         if self.worksAlone: #Used for tests
             for i in range (10):
                 image = self.camera.capture_np()
-                #img_final = imgCalibrator.undistort(image)
                 self.saveData(image,0.5)
                 cv2.waitKey(1)
             self.done = True
-        else:
+        else: # Normal functionning
                 while (not self.stopped):
                     stTime = time.time()
                     img = self.camera.capture_np()
                     if self.stopped :
                         break
-                    # savedAngle = TB_Library.map(self.car.SteeringCtrl.currentSteering,-1,1,135,45)
-                    # print(F"Saved Angle : {savedAngle}")
-                    self.saveData(img,TB_Library.map(self.car.SteeringCtrl.currentSteering,-1,1,135,45))
+                    self.saveData(img,TB_Library.map(self.car.SteeringCtrl.currentSteering,1,-1,135,45))
                     elapsedtime = time.time() - stTime
                     self.timesList.append(elapsedtime)
-    def getDatas (self):
-        with Listener(self.address,authkey=None) as listener :
-            print("Collection started...")
-            conn = listener.accept()
-            print ('connection accepted from', listener.last_accepted)
-            #print("Waiting for client to be ready")
-            with conn:
-                data = conn.recv()
-                while data != 'Ready':
-                    print("Waiting for client to start...")
-                    data = conn.recv()
-                while data != 'close':
-                    if data != 'Ready':
-                        img = self.camera.capture_np()
-                        self.saveData(img,data)
 
 
 
@@ -141,9 +132,6 @@ if __name__ == '__main__':
     config = TB_Library.load_configuration(CONFIG_FNAME)
     myCar = Car(config)
     Collector = DataCollector(myCar,alone=True)
-    # imgCalibrator = ImageCalibrator( # IF Config file = conf_MAR
-    #     imageShape = config["CALIBRATION"]["img_resolution"][::-1], #Reverse values
-    #     ParamFile = os.path.join(currentdir, config["CALIBRATION"]["paramFile"]))
     with Collector :
         print("DataCollecting...")
         while (not Collector.done):

@@ -36,7 +36,6 @@ def print_error():
 
 
 def main(argv):
-    #event_filename = '/dev/input/event5'
     conf = TB_Library.load_configuration(CONFIG_FNAME)
     event_filename = conf["CONTROLLER"]["event_filename"]
     ManualCar = Car(conf)
@@ -60,7 +59,6 @@ def main(argv):
         startTime = time.time()
         run_manually(event_filename,ManualCar,Collector) 
         print(F"Duration : {time.time()-startTime}")
-    #pause()
 
 
 def run_manually(event_filename,car,Collector):
@@ -80,16 +78,13 @@ async def event_manager(device,car):
     async for event in device.async_read_loop():
         if event.type == ecodes.EV_ABS:
             if  event.code == ecodes.ABS_X:  #Joy Gauche / Gauche- Droite+
-                #setAngle = TB_Library.map(event.value, 0, 255, 1, -1)
                 car.SteeringCtrl.angle(TB_Library.map(event.value, 0, 255, -1, 1)) #Inverse des limites afin de tourner a gauche lorsque l'on pointe le joystick à gauche
-                #print("X: ", event.value)
             elif  event.code == ecodes.ABS_RY: #Joy Droite / Haut- Bas+
                 if event.value > 0 and event.value < 20 :
                     val = 0
                 else:
                     val = event.value
                 car.SpeedCtrl.speed(TB_Library.map(val, 0, 255, 1, -1)) 
-                #print("Y: ", event.value)
         elif event.type == ecodes.EV_KEY :
             if event.code == ecodes.BTN_B : # If button B (xBox) or circle (ps4) is pressed, exiting loop !
                 raise KeyboardInterrupt

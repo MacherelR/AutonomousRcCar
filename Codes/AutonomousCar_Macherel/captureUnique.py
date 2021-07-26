@@ -1,3 +1,18 @@
+## ----------------------------------- Infos -----------------------------------
+#   Author:            Rémy Macherel
+#   Project:           Autonomous RC Car
+#   File:              captureUnique.py
+#   Link:              https://github.com/MacherelR/AutonomousRcCar
+#   Creation date :    12.04.2021
+#   Last modif date:   12.04.2021
+## ----------------------------------- Infos -----------------------------------
+
+## -------------------------------- Description --------------------------------
+#   File used in the project's development to capture an unique image and save
+#   it directly in the folder.
+## -------------------------------- Description --------------------------------
+
+
 import sys, getopt, os,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 
@@ -29,12 +44,9 @@ if __name__ == '__main__':
     time.sleep(2)
     idx = 0
     while int(key) != 0 :
-        #img = camera.capture_np()
-        #img = cv2.resize(src= camera.current_frame,dsize=tuple(conf["ROAD_FOLLOWING"]["img_resolution"]))
         img = camera.current_frame
         if img is not None:
             img = cv2.cvtColor(img,cv2.COLOR_RGB2BGR)
-            # img = imgRectifier.undistort(img)
             cv2.imwrite(F"image_{idx}.png",img)
             cv2.waitKey(1)
             idx = idx+1 

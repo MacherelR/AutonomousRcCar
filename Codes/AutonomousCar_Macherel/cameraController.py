@@ -1,4 +1,9 @@
-#inspired by https://github.com/jrosebr1/imutils/blob/master/imutils/video/pivideostream.py
+## -------------------------------- Description --------------------------------
+#   This file defines the class and methods for the Camera.
+#	Initially written by Maxime Charrière, inspired by https://github.com/jrosebr1/imutils/blob/master/imutils/video/pivideostream.py,
+#	Updated and adapted By Rémy Macherel
+## -------------------------------- Description --------------------------------
+
 
 # import the necessary packages
 import sys, getopt, os,inspect
@@ -33,10 +38,6 @@ class PicameraController(PiCamera):
 
 		self.conf = conf
 		self.current_threads_fps = current_threads_fps
-		# self.undistorter = ImageCalibrator(
-		# 	imgShape = self.conf["ROAD_FOLLOWING"]["img_resolution"][::-1],
-        #     calParamFile = os.path.join(currentdir, self.conf["ROAD_FOLLOWING"]["calibration"]["param_file"])
-		# )
 		# initialize the camera
 		PiCamera.__init__(self, camera_num, stereo_mode, stereo_decimate, resolution, framerate, sensor_mode, led_pin, clock_mode, framerate_range)
 
@@ -53,9 +54,6 @@ class PicameraController(PiCamera):
 		self.capture(self.rawCapture, format="rgb", use_video_port=True)
 		frame_np = self.rawCapture.array
 		self.rawCapture.truncate(0)
-		#frame_np = cv2.cvtColor(frame_np,cv2.COLOR_BGR2RGB)
-		# if self.undistorter is not None:
-		# 	undistortedImg = self.undistorter.undistort(frame_np)
 		return frame_np
 
 	def __enter__(self):

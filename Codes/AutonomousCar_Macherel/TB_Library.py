@@ -9,7 +9,8 @@
 ## ----------------------------------- Infos -----------------------------------
 
 ## -------------------------------- Description --------------------------------
-#   This file contains all my useful functions that I often use 
+#   This file contains all my useful functions that I often use, some of them written
+#   by Maxime Charrière, https://github.com/maximecharriere/AutonomousRcCar
 ## -------------------------------- Description --------------------------------
 
 

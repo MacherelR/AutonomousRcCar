@@ -1,12 +1,24 @@
+## ----------------------------------- Infos -----------------------------------
+#   Author:            Maxime Charriere
+#   Project:           Autonomous RC Car
+#   File:              car.py
+#   Link:              https://github.com/maximecharriere/AutonomousRcCar
+#   Creation date :    12.04.2020
+#   Last modif date:   15.06.2021
+#   Last modif author : Rémy Macherel
+## ----------------------------------- Infos -----------------------------------
+
+## -------------------------------- Description --------------------------------
+#   Car class definition, written initially by Maxime Charrière, modified and 
+#   adapted by Rémy Macherel
+## -------------------------------- Description --------------------------------
+
+
+
 import sys, getopt, os,inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 from actuator_controller import SteeringController,SpeedController
 from cameraController import PicameraController
-#
-# from image_warper import ImgWarper
-# from image_rectifier import ImgRectifier
-# from UndistortImage import ImageCalibrator
-#
 import time
 
 
@@ -49,9 +61,6 @@ class Car():
         self.SteeringCtrl.startPwm()
         self.SpeedCtrl.startPwm()
         self.camera.startThread()
-        # Start a fullscreen raw preview
-        # if self.conf["DISPLAY"]["show_cam_preview"]:
-        #     self.camera.start_preview()
 
     def stop(self):
         self.camera.stopThread()

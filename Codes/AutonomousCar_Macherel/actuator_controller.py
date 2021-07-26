@@ -3,10 +3,11 @@
 ## ----------------------------------- Infos -----------------------------------
 #   Author:            Maxime Charriere
 #   Project:           Autonomous RC Car
-#   File:              PwmController.py
+#   File:              actuator_controller.py
 #   Link:              https://github.com/maximecharriere/AutonomousRcCar
 #   Creation date :    12.04.2020
-#   Last modif date:   01.05.2020
+#   Last modif date:   15.06.2021
+#   Last modif author : Rémy Macherel
 ## ----------------------------------- Infos -----------------------------------
 
 ## -------------------------------- Description --------------------------------
@@ -56,9 +57,8 @@ class SteeringController(_PwmActuator):
         -1   = MAX RIGHT
         0  = FORWARD
         1 = MAX LEFT"""
-        # normAngle = TB_Library.map(angle,0,100,-1,1)
         dutyCycle = TB_Library.map(angle,1,-1,self.MinDutyCycle,self.MaxDutyCycle,limit=True)
-        #print(F"Duty cycle value sent to pwm_ctrl : {dutyCycle}")
+        #print(F"Duty cycle value sent to pwm_ctrl : {dutyCycle}") #Used for debug
         self.currentSteering = angle
         self.pwm_ctrl.set_duty_cycle(dutyCycle)
 
@@ -82,8 +82,6 @@ class SpeedController(_PwmActuator):
         0  = STOP
         1 = MAX SPEED FORWARD"""
         duty_cycle = TB_Library.map(speed,-1,1,self.MinDutyCycle,self.MaxDutyCycle,limit=True)
-        #print(F"Duty_cycle : {duty_cycle}")
+        #print(F"Duty_cycle : {duty_cycle}") #Used for debug
         self.currentSpeed = duty_cycle
-        
-        #print(F"Speed Value : {duty_cycle}")
-        self.pwm_ctrl.set_duty_cycle(duty_cycle) #duty_cycle
+        self.pwm_ctrl.set_duty_cycle(duty_cycle)
