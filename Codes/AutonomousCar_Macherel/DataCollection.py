@@ -43,12 +43,11 @@ from multiprocessing.connection import Listener
 class DataCollector():
     stopped = False
     done = False
-    def __init__(self,car,Listen=None,alone = False,freqMs = 10,current_threads_fps=None):
+    def __init__(self,car,alone = False,freqMs = 10,current_threads_fps=None):
         self.worksAlone = alone
         self.car = car
         self.camera = self.car.camera
         self.freq = freqMs/1000 # Convert in s for sleep
-        self.address = Listen
         self.imagesList = []
         self.steeringList = []
         self.timesList = []

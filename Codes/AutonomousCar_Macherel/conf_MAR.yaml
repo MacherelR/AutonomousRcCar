@@ -1,5 +1,6 @@
 APP:
   maxFps: 50
+  displayOutput : True
 CALIBRATION:
   img_resolution:
   - 160

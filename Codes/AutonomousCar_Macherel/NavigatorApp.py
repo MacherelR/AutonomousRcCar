@@ -73,10 +73,11 @@ class NavigationApp():
                 launchTime = startTime
                 while (time.time() - launchTime) < 30:
                     # Display Datas
-                    if self.LaneNavigator.OriginalImage is not None:
-                        cv2.imshow("Original",cv2.cvtColor(self.LaneNavigator.OriginalImage,cv2.COLOR_RGB2BGR))
-                    if self.LaneNavigator.drawedImage is not None:
-                        cv2.imshow("Heading",cv2.cvtColor(self.LaneNavigator.drawedImage,cv2.COLOR_RGB2BGR))
+                    if self.conf['APP']['displayOutput']:
+                        if self.LaneNavigator.OriginalImage is not None:
+                            cv2.imshow("Original",cv2.cvtColor(self.LaneNavigator.OriginalImage,cv2.COLOR_RGB2BGR))
+                        if self.LaneNavigator.drawedImage is not None:
+                            cv2.imshow("Heading",cv2.cvtColor(self.LaneNavigator.drawedImage,cv2.COLOR_RGB2BGR))
                     # --------- CAR SPEED ----------
                     if self.LaneNavigator.offRoad == False:
 

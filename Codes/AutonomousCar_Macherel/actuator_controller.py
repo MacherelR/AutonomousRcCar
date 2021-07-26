@@ -32,7 +32,7 @@ class _PwmActuator(object):
         self.MinDutyCycle = minDutyCycle
         self.MaxDutyCycle = maxDutyCycle
         self.NeutralDutyCycle = (minDutyCycle+maxDutyCycle)/2
-        self.currentSteering = 0
+        
         if (hardware):
             self.pwm_ctrl= my_pwm.HardPwm(pin, PWM_FREQ)
             print("Hardware PWM")
@@ -50,6 +50,7 @@ class _PwmActuator(object):
 
 class SteeringController(_PwmActuator):
     def __init__(self, pin, minDutyCycle, maxDutyCycle, hardware=False):
+        self.currentSteering = 0
         _PwmActuator.__init__(self,pin, minDutyCycle, maxDutyCycle, hardware)
 
     def angle(self, angle):

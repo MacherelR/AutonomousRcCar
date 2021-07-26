@@ -23,7 +23,6 @@ class PicameraController(PiCamera):
 	new_frame_event = Event()
 
 	def __init__(self,
-		conf,
 		cam_param_dict = {},
 		current_threads_fps = None,
 		camera_num=0, 
@@ -36,8 +35,7 @@ class PicameraController(PiCamera):
 		clock_mode='reset', 
 		framerate_range=None):
 
-		self.conf = conf
-		self.current_threads_fps = current_threads_fps
+		# self.current_threads_fps = current_threads_fps
 		# initialize the camera
 		PiCamera.__init__(self, camera_num, stereo_mode, stereo_decimate, resolution, framerate, sensor_mode, led_pin, clock_mode, framerate_range)
 
@@ -98,6 +96,6 @@ class PicameraController(PiCamera):
 				self.rawCapture.close()
 				self.close()
 				return
-			if self.current_threads_fps is not None:
-				self.current_threads_fps[self.__class__.__name__] = 1/(time.time()-start_time)
-				start_time = time.time()
+			# if self.current_threads_fps is not None:
+			# 	self.current_threads_fps[self.__class__.__name__] = 1/(time.time()-start_time)
+			# 	start_time = time.time()
